@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sample-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: database_name
+      MYSQL_USER: database_user
+      MYSQL_PASSWORD: database_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  node:
+    build:
+       context: .
+       dockerfile: Dockerfile
+    container_name: sample-api
+    restart: always
+    working_dir: /api
+    volumes:
+      - ./backend:/api
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: sample-phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8088:80"  
+    networks:
+      - app-network
+    
+  frontend:
+    image: nginx:alpine
+    container_name: sample-frontend
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    networks:
+      - app-network
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
