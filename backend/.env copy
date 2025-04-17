@@ -4,3 +4,5 @@ DB_USER=database_user
 DB_PASSWORD=database_password
 DB_ROOT_PASSWORD=rootpassword
 DB_NAME=database_name
+JWT_SECRET=supersecretkey123
+JWT_EXPIRES_IN=1d

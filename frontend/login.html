@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Login</h2>
+    <form id="register-form">
+        <input type="text" id="usernameOrEmail" placeholder="use your email or username">
+        <input type="password" id="password" placeholder="Password">
+        <button type="submit">Login</button>
+        <div class="message" id="message"></div>
+    </form>
+    <script>
+        const form = document.getElementById('register-form');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const usernameOrEmail = document.getElementById('usernameOrEmail').value
+            const password = document.getElementById('password').value;
+            //if(username.value == '' || email.value == ''  || password.value == ''  || confirmPassword.value == '' ){
+            //   alert('field requre!')
+            //}
+
+            //if(password !== confirmPassword){
+            //    alert('password not match!')
+            //    password.value ="";
+            //    confirmPassword.value =""
+            //}
+            try{
+                const token = sessionStorage.getItem('token');
+                const res = await fetch('http://localhost:3000/auth/login',{
+                    method: 'POST',
+                    headers: {
+                        'Content-type' : 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ usernameOrEmail, password})
+                })
+
+                const data = await res.json();
+
+                if(res.ok){
+                    message.textContent = 'Login successful!';
+                    window.location.href = 'http://localhost:8080/profile.html'
+                    message.classList.remove('error');
+                    form.reset();
+                }else{
+                    message.textContent = data.message || 'Something went wrong';
+                    message.classList.add('error');
+                }
+            }catch(e){
+                message.textContent = 'Network error';
+                message.classList.add('error');
+            }
+        })
+    </script>
+</body>

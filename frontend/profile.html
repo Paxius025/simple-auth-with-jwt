@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+</head>
+
+<body>
+    <h2>Profile</h2>
+    <div id="message">hi</div>
+    <ul id="profile-info"></ul>
+    <button id="load" type="submit">Load</button>
+    <button id="logout">Logout</button>
+
+
+    <script>
+        const button = document.getElementById('load');
+        const message = document.getElementById('message');
+        const profileInfo = document.getElementById('profile-info');
+        const token = sessionStorage.getItem('token');
+        const logoutButton = document.getElementById('logout');
+        if (!token) {
+            window.location.href = '/login.html';  
+        }
+
+        logoutButton.addEventListener('click', ()=> {
+            sessionStorage.removeItem('token');
+            window.location.href = '/login.html';  
+
+        })
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await fetch('http://localhost:3000/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    message.textContent = 'Load profile successful!';
+                    message.classList.remove('error');
+
+                    profileInfo.innerHTML = `
+            <li><strong>Username:</strong> ${data.username}</li>
+            <li><strong>Email:</strong> ${data.email}</li>
+          `;
+                } else {
+                    message.textContent = data.message || 'Something went wrong';
+                    message.classList.add('error');
+                }
+            } catch (e) {
+                message.textContent = 'Network error';
+                message.classList.add('error');
+            }
+        });
+    </script>
+</body>
+
+</html>
