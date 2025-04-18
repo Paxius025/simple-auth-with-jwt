@@ -1,6 +1,6 @@
-#  Environment for writing APIs with Node.js and MySQL.
+#  Authentication with JWT.
 
-A development environment for writing APIs with Node.js, integrated with a MySQL database, and managed using Docker and Docker Compose. This setup also includes tools for database management and a frontend for testing purposes.
+Basic authentication with JWT.
 
 ## Features
 
