@@ -77,36 +77,6 @@ Make sure you have the following installed on your system:
    ```bash
     docker-compose down
    ```
-
-## Writing APIs with Node.js
-
-- The backend code is located in the `backend` directory.
-- Use the `index.js` file as the entry point for your API.
-- The `nodemon` tool is pre-installed and configured to automatically reload the server when you make changes to the code.
-
-### Example API Endpoint
-
-Here’s an example of how you can define an API endpoint in `server.js`:
-
-```javascript
-import express from "express";
-import { config } from "dotenv";
-import healthCheck from "./routes/dbHealth.js";
-
-config();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(express.json());
-
-app.use("/db-health",healthCheck);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-```
-
 ## Project Structure
 
 ```
